@@ -44,7 +44,7 @@ class ImagePreviewWidget(PreviewWidget):
     def render(self, name, data, attrs={}):
         from easy_thumbnails.files import get_thumbnailer
         from easy_thumbnails.files import Thumbnailer
-        if self.instance:
+        if not self.form.preview_instance_required or self.instance is not None:
             images = self.form.get_images(self.instance)
             options = dict(size=(120, 120), crop=False)
             html = '<div class="adminboost-preview">'
@@ -69,6 +69,8 @@ class PreviewField(forms.Field):
         super(PreviewField, self).__init__(*args, **kwargs)
 
 class PreviewInlineForm(forms.ModelForm):
+    
+    preview_instance_required = True # If True, the widget will only be displayed if an instance of the model exists (i.e. the object has already been saved at least once)
     
     def __init__(self, *args, **kwargs):
         super(PreviewInlineForm, self).__init__(*args, **kwargs)

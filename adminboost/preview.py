@@ -3,10 +3,13 @@ from django.utils.translation import ugettext as _
 from django.utils.safestring import mark_safe
 from django.contrib.admin.options import InlineModelAdmin
 from django.conf import settings
+from django.core.files.storage import default_storage
+from django.utils.encoding import force_unicode
 
 
 
 # Admin classes ------------------------------------------------------------
+
 
 class PreviewInline(InlineModelAdmin):
     def __init__(self, *args, **kwargs):
@@ -40,13 +43,17 @@ class ImagePreviewWidget(PreviewWidget):
         
     def render(self, name, data, attrs={}):
         from easy_thumbnails.files import get_thumbnailer
+        from easy_thumbnails.files import Thumbnailer
         if self.instance:
             images = self.form.get_images(self.instance)
             options = dict(size=(120, 120), crop=False)
             html = '<div class="adminboost-preview">'
             for image in images:
                 thumbnail = get_thumbnailer(image.file).get_thumbnail(options)
-                image_url = image.file.url
+                if isinstance(image.file, Thumbnailer):
+                    image_url = default_storage.url(force_unicode(image.file.name))
+                else:
+                    image_url = image.file.url
                 html += '<div class="adminboost-preview-thumbnail"><a href="%(image_url)s" target="_blank"><img src="%(thumbnail_url)s"/></a></div>' % {'image_url': image_url, 'thumbnail_url': thumbnail.url}
             html += '</div>'
             return mark_safe(html)
@@ -66,8 +73,8 @@ class PreviewInlineForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(PreviewInlineForm, self).__init__(*args, **kwargs)
         preview_field = PreviewField(
-            label=_('Preview'), required=False,
-            instance=kwargs.get('instance', None), form=self)
+            label = _('Preview'), required=False,
+            instance = kwargs.get('instance', None), form=self)
         self.fields.insert(0, 'preview', preview_field)
         self.base_fields.insert(0, 'preview', preview_field)
         

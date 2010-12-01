@@ -4,6 +4,6 @@
 <script type="text/javascript" src="{{ MEDIA_URL }}adminboost/jquery-ui-1.8.4/jquery-ui-1.8.4.min.js"></script>
 <script type="text/javascript" src="{{ MEDIA_URL }}adminboost/scripts.js"></script>
 <script type="text/javascript">
-    var prefixes = [{% for prefix in prefixes %}"{{ prefix }}",{% endfor %}];
-    init_sortable_inlines(prefixes);
+    var sortable_inlines = [[{% for inline in inlines %}"{{ inline.0 }}",{% if inline.1 %}"{{ inline.1 }}"{% else %}undefined{% endif %}],{% endfor %}];
+    init_sortable_inlines(sortable_inlines);
 </script>

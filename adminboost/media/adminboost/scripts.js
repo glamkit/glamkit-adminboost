@@ -8,13 +8,23 @@ if (window.$){
 
 var sortable_jquery = $.noConflict(no_conflict);
 
-function init_sortable_inlines(prefixes) {
+function init_sortable_inlines(inlines) {
     (function($){
         $(document).ready(function(){
-            $.each(prefixes, function(i, qs_name){
+            $.each(inlines, function(i, inline){
                 
-               //remove order fields from the form
-                var $group = $("#" + qs_name + "-group");
+                var prefix = inline[0];
+                var order_field;
+                
+                if (inline[1] == undefined) {
+                    order_field = 'order';
+                }
+                else {
+                    order_field = inline[1]; 
+                }
+                
+                // remove order fields from the form
+                var $group = $("#" + prefix + "-group");
                 if ($group.length === 0){
                     return true; // continue iteration
                 }
@@ -25,7 +35,7 @@ function init_sortable_inlines(prefixes) {
                 
                 var arrow = $('<span class="ui-icon ui-icon-arrowthick-2-n-s adminboost-sortable-inlines-handle"></span>');
                 
-                var createUpdater = function(qs_name, $group, $hidden){
+                var createUpdater = function(prefix, $group, $hidden){
                     /*
                     Unfortunately this ugly function factory is indeed necessary
                     Otherwise, function binded to $("submit").click (see the bottom of this file)
@@ -46,9 +56,9 @@ function init_sortable_inlines(prefixes) {
                         // onUpdate event - update hidden fields
                         var txt = "";
                         var i = 0;
-                        $group.find(selector + "[class~=dynamic-" + qs_name + "]").each(function(i, domEl){
+                        $group.find(selector + "[class~=dynamic-" + prefix + "]").each(function(i, domEl){
                             var $row = $(domEl);
-                            $row.find(".order").remove();
+                            $row.find("." + order_field).remove();
                             var row_num = $row.find("input:first").attr("name").match(/[0-9]+/);
                             if ($row.hasClass("empty-form")){
                                 return true; // continue
@@ -64,7 +74,7 @@ function init_sortable_inlines(prefixes) {
                                 }
                             }
                             
-                            txt += "<input type='hidden' name='" + qs_name + "-" + row_num + "-order' value='" + i + "' />";
+                            txt += "<input type='hidden' name='" + prefix + "-" + row_num + "-" + order_field + "' value='" + i + "' />";
                             i++;
                         });
                         $hidden.html(txt);
@@ -78,8 +88,9 @@ function init_sortable_inlines(prefixes) {
                     
                     $group.inline_type = "tabular";
                     
-                    $group.find("th:contains(Order)").remove();
-                    $group.find(".order").remove();
+                    $group.find("th").filter(function(index) {
+                        return $(this).text().toLowerCase() == order_field
+                    }).remove();
                     
                     $group.find("th[colspan=2]").removeAttr("colspan");
                     $group.find("th:first").attr("colspan", "2");
@@ -91,7 +102,7 @@ function init_sortable_inlines(prefixes) {
         
                     // add sortable from jqueryui
                     $group.find("table tbody:first").sortable({
-                        update: createUpdater(qs_name, $group, $hidden),
+                        update: createUpdater(prefix, $group, $hidden),
                         items: 'tr[class!=add-row]',
                         handle: "td:first",
                         distance: 6,
@@ -102,14 +113,14 @@ function init_sortable_inlines(prefixes) {
                 else {
                     $group.inline_type = "stacked";
                     
-                    $group.find(".form-row.order").remove();
+                    $group.find(".form-row." + order_field).remove();
     
                     $group.children(".inline-related").each(function(){
                         $(this).children("h3").prepend(arrow.clone());
                     });
                     // add sortable from jqueryui
                     $group.sortable({
-                        update: createUpdater(qs_name, $group, $hidden),
+                        update: createUpdater(prefix, $group, $hidden),
                         items: ".inline-related",
                         handle: ".adminboost-sortable-inlines-handle",
                         distance: 6,
@@ -123,10 +134,10 @@ function init_sortable_inlines(prefixes) {
                         }
                     });
                 }
-                createUpdater(qs_name, $group, $hidden)();
+                createUpdater(prefix, $group, $hidden)();
                 
                 $("form").submit(function(){
-                    createUpdater(qs_name, $group, $hidden)();
+                    createUpdater(prefix, $group, $hidden)();
                 });
             });
         });

@@ -136,6 +136,10 @@ function init_sortable_inlines(inlines) {
                 }
                 createUpdater(prefix, $group, $hidden)();
                 
+                $group.find('.add-row a').click(function(){
+                    createUpdater(prefix, $group, $hidden)();
+                });
+                
                 $("form").submit(function(){
                     createUpdater(prefix, $group, $hidden)();
                 });

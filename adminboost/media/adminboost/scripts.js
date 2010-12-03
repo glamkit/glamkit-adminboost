@@ -58,6 +58,11 @@ function init_sortable_inlines(inlines) {
                         var i = 0;
                         $group.find(selector + "[class~=dynamic-" + prefix + "]").each(function(i, domEl){
                             var $row = $(domEl);
+                            
+                            if (!$row.attr('id')) {
+                                return; // If it doesn't have an id then it probably is a row that purely contains an error message. So just skip it.
+                            }
+                            
                             $row.find("." + order_field).remove();
                             var row_num = $row.find("input:first").attr("name").match(/[0-9]+/);
                             if ($row.hasClass("empty-form")){
@@ -96,7 +101,10 @@ function init_sortable_inlines(inlines) {
                     $group.find("th:first").attr("colspan", "2");
         
                     $group.find("tr[class!=add-row]").each(function(){
-                        $(this).find("td:first").prepend(arrow.clone());
+                        if ($(this).attr('id')) {
+                            // If it doesn't have an id then it probably is a row that purely contains an error message. So just skip it.
+                            $(this).find("td:first").prepend(arrow.clone());
+                        }
                     });
                     $("<tbody></tbody>").appendTo($group.find("table")).append($group.find(".add-row").remove());
         
@@ -116,7 +124,10 @@ function init_sortable_inlines(inlines) {
                     $group.find(".form-row." + order_field).remove();
     
                     $group.children(".inline-related").each(function(){
-                        $(this).children("h3").prepend(arrow.clone());
+                        if ($(this).attr('id')) {
+                            // If it doesn't have an id then it probably is a row that purely contains an error message. So just skip it.
+                            $(this).children("h3").prepend(arrow.clone());
+                        }
                     });
                     // add sortable from jqueryui
                     $group.sortable({

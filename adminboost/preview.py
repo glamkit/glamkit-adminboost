@@ -55,6 +55,9 @@ class ImagePreviewWidget(PreviewWidget):
                 else:
                     image_url = image.file.url
                 html += '<div class="adminboost-preview-thumbnail"><a href="%(image_url)s" target="_blank"><img src="%(thumbnail_url)s"/></a></div>' % {'image_url': image_url, 'thumbnail_url': thumbnail.url}
+            help_text = self.form.get_preview_help_text(self.instance)
+            if help_text is not None:
+                html += '<p class="help">%s</p>' % force_unicode(help_text)
             html += '</div>'
             return mark_safe(html)
         else:
@@ -89,6 +92,10 @@ class ImagePreviewInlineForm(PreviewInlineForm):
     
     preview_widget_class = ImagePreviewWidget
     
-    def get_images(self, instance):
+    def get_preview_help_text(self, instance):
+        ''' Returns text that should be displyed under the image(s). Useful for example to display a disclaimer about the preview '''
+        return None
+    
+    def get_images(self, instance): # TODO: Rename to get_preview_images
         ''' This needs to be specified by the child form class, as we cannot anticipate the name of the image model field '''
         raise NotImplementedError

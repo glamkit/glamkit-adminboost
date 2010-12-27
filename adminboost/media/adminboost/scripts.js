@@ -93,9 +93,9 @@ function init_sortable_inlines(inlines) {
                     
                     $group.inline_type = "tabular";
                     
-                    $group.find("th").filter(function(index) {
-                        return $(this).text().toLowerCase() == order_field
-                    }).remove();
+                    // Hide table header
+                    var field_index = $group.find('.empty-form td.' + order_field).index()
+                    $group.find("th").eq(field_index - 1).remove();
                     
                     $group.find("th[colspan=2]").removeAttr("colspan");
                     $group.find("th:first").attr("colspan", "2");

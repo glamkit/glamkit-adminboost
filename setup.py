@@ -8,8 +8,7 @@ setup(
     description='Makes the Django admin even more awesomer',
     url='http://github.com/glamkit/glamkit-admintools',
     packages=find_packages(),
-    package_data={
-    },
+    include_package_data=True,
     zip_safe=False,
     classifiers=[
         'Development Status :: 4 - Beta',

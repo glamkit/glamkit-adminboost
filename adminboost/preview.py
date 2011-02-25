@@ -59,9 +59,9 @@ class ImagePreviewWidget(PreviewWidget):
             if help_text is not None:
                 html += '<p class="help">%s</p>' % force_unicode(help_text)
             html += '</div>'
-            return mark_safe(html)
+            return mark_safe(unicode(html))
         else:
-            return ''
+            return u''
         
 class PreviewField(forms.Field):
     """ Dummy "field" to provide preview thumbnail. """

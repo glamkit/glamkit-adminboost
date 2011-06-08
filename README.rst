@@ -10,11 +10,12 @@ Assumptions:
 Usage example:
     In the change_form.html of our model which has inlines "Feature", "HomeFullWidthFeature" etc. 
 
-    {% load admin_enhancements_includes %}
+    {% load adminboost_tags %}
 
     {% block extrahead %}
         {{ block.super }}
-        {% sortable_inlines "Feature" "HomeFullWidthFeature" "HomeHalfFeature" "HomeQuarterFeature" "CollectionFeature" %}
+        {% sortable_inlines "feature_set" %}
+        {% sortable_inlines "homefullwidthfeature_set" %}
     {% endblock %}
 
 Image preview

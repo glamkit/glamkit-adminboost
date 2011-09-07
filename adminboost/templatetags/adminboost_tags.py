@@ -21,7 +21,7 @@ class SortableInlineNode(Node):
             self.inlines.append((prefix, order_field))
 
     def render(self, context):
-        c = {"inlines": [(prefix, order_field) for (prefix, order_field) in self.inlines], "MEDIA_URL": settings.MEDIA_URL}
+        c = {"inlines": [(prefix, order_field) for (prefix, order_field) in self.inlines], "STATIC_URL": settings.STATIC_URL}
         return loader.render_to_string("adminboost/sortable_inlines.html", c)
 
 

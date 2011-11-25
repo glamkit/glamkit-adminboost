@@ -81,10 +81,7 @@ class VerboseForeignKeyRawIdWidget(AlwaysRenderLabel, ForeignKeyRawIdWidget):
         try:
             obj = self.rel.to._default_manager.using(
                 self.db).get(**{key: value})
-            try:
-                link = render_edit_link(obj, self.db_field)
-            except NoReverseMatch:
-                link = u'<strong>%s</strong>' % escape(obj)
+            link = render_edit_link(obj, self.db_field)
         except (ValueError, self.rel.to.DoesNotExist):
             return render_edit_links(
                 self.db_field.model, [], self.db_field)
@@ -106,11 +103,7 @@ class VerboseManyToManyRawIdWidget(AlwaysRenderLabel, ManyToManyRawIdWidget):
             try:
                 obj = self.rel.to._default_manager.using(
                     self.db).get(**{key: v})
-                try:
-                    links.append(render_edit_link(obj, self.db_field))
-                except NoReverseMatch:
-                    links += [
-                        u'<strong>%s</strong>' % escape(smart_unicode(obj))]
+                links.append(render_edit_link(obj, self.db_field))
             except (ValueError, self.rel.to.DoesNotExist):
                 links += [u'???']
         return render_edit_links(

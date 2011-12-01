@@ -32,6 +32,12 @@ window.dismissRelatedLookupPopup = function(win, newId, newRepr){
     django.jQuery("#"+windowname_to_id(win.name)).change();
 }
 
+window.djangoDismissAddAnotherPopup = window.dismissAddAnotherPopup;
+window.dismissAddAnotherPopup = function(win, newId, newRepr){
+    window.djangoDismissAddAnotherPopup(win, newId, newRepr);
+    django.jQuery("#"+windowname_to_id(win.name)).change();
+}
+
 function dismissEditPopup(win, newId, newRepr){
     dismissRelatedLookupPopup(win, newId, newRepr);
 }

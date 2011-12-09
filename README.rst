@@ -18,6 +18,19 @@ Usage example:
         {% sortable_inlines "homefullwidthfeature_set" %}
     {% endblock %}
 
+Edit link templatetag
+---------------------------
+
+Functionality:
+    This templatetag outputs an icon which links to the Django Admin change page for a specific object.
+
+Assumptions:
+    The object's Model is registered with Django's Admin.
+
+Usage example:
+    {% load adminboost_tags %}
+    {% edit_link object %}
+
 Image preview
 -------------
 

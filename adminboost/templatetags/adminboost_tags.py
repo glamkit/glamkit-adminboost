@@ -1,5 +1,5 @@
 import re
-
+from django.core.urlresolvers import reverse
 from django.template import Library, Node, TemplateSyntaxError, loader
 from django.conf import settings
 
@@ -49,3 +49,27 @@ def sortable_inlines(parser, token):
     except IndexError:
         raise TemplateSyntaxError("Incorrect syntax for the prefixes passed to {% sortable_inlines %}. Try surrounding prefixes with double quotes")
     return SortableInlineNode(bits)
+
+class EditLinkNode(Node):
+    def render(self, context):
+        obj = context['object']
+        static_url = context['STATIC_URL']
+        url = reverse(
+            'admin:{0}_{1}_change'.format(
+                obj._meta.app_label,
+                obj._meta.verbose_name
+            ),
+            args=[obj.pk]
+        )
+        return '<a href="{0}"><img src="{1}/admin/img/icon_changelink.gif" title="Edit" alt="Edit"/></a>'.format(url, static_url)
+
+@register.tag
+def edit_link(parser, token):
+    """
+        Syntax:
+
+        {% edit_link obj %}
+
+        Renders a clickable image which links to the admin corresponding to :obj.
+    """
+    return EditLinkNode()

@@ -30,6 +30,7 @@ Assumptions:
 
 Usage example:
     {% load adminboost_tags %}
+    
     {% edit_link object %}
 
 Image preview

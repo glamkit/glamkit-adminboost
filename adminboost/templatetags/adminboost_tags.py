@@ -56,14 +56,17 @@ class EditLinkNode(Node):
         perms = context['perms']
         app_label = obj._meta.app_label
         class_name = obj.__class__.__name__.lower()
-        # If the user has permission to change the object, render the edit icon.
-        if perms.user.has_perm('{0}.change_{1}'.format(app_label, class_name)):
+
+        # If the user has permission to change the Model or the specific object,
+        # render the edit icon.
+        if perms.user.has_perm('{0}.change_{1}'.format(app_label, class_name))\
+        or perms.user.has_perm('{0}.change_{1}'.format(app_label, class_name), obj):
             static_url = context['STATIC_URL']
             url = reverse(
                 'admin:{0}_{1}_change'.format(app_label, class_name),
                 args=[obj.pk]
             )
-            return '<a href="{0}"><img src="{1}/admin/img/icon_changelink.gif" title="Edit" alt="Edit"/></a>'.format(url, static_url)
+            return '<a class="admin-edit-link" href="{0}"><img src="{1}/admin/img/icon_changelink.gif" title="Edit" alt="Edit"/></a>'.format(url, static_url)
         else:
             return ''
 

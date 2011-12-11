@@ -26,6 +26,7 @@ Functionality:
 
 Assumptions:
     The object's Model is registered with Django's Admin.
+    A user is logged-in and has permission to edit the object.
 
 Usage example:
     {% load adminboost_tags %}

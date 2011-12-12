@@ -50,28 +50,8 @@ def sortable_inlines(parser, token):
         raise TemplateSyntaxError("Incorrect syntax for the prefixes passed to {% sortable_inlines %}. Try surrounding prefixes with double quotes")
     return SortableInlineNode(bits)
 
-class EditLinkNode(Node):
-    def render(self, context):
-        obj = context['object']
-        perms = context['perms']
-        app_label = obj._meta.app_label
-        class_name = obj.__class__.__name__.lower()
-
-        # If the user has permission to change the Model or the specific object,
-        # render the edit icon.
-        if perms.user.has_perm('{0}.change_{1}'.format(app_label, class_name))\
-        or perms.user.has_perm('{0}.change_{1}'.format(app_label, class_name), obj):
-            static_url = context['STATIC_URL']
-            url = reverse(
-                'admin:{0}_{1}_change'.format(app_label, class_name),
-                args=[obj.pk]
-            )
-            return '<a class="admin-edit-link" href="{0}"><img src="{1}/admin/img/icon_changelink.gif" title="Edit" alt="Edit"/></a>'.format(url, static_url)
-        else:
-            return ''
-
-@register.tag
-def edit_link(parser, token):
+@register.simple_tag(takes_context=True)
+def edit_link(context, object):
     """
         Syntax:
 
@@ -79,4 +59,19 @@ def edit_link(parser, token):
 
         Renders a clickable image which links to the admin corresponding to :obj.
     """
-    return EditLinkNode()
+    perms = context['perms']
+    app_label = object._meta.app_label
+    class_name = object.__class__.__name__.lower()
+
+    # If the user has permission to change the Model or the specific object,
+    # render the edit icon.
+    if perms.user.has_perm('{0}.change_{1}'.format(app_label, class_name))\
+    or perms.user.has_perm('{0}.change_{1}'.format(app_label, class_name), object):
+        static_url = context['STATIC_URL']
+        url = reverse(
+            'admin:{0}_{1}_change'.format(app_label, class_name),
+            args=[object.pk]
+        )
+        return '<a class="admin-edit-link" href="{0}"><img src="{1}/admin/img/icon_changelink.gif" title="Edit" alt="Edit"/></a>'.format(url, static_url)
+    else:
+        return ''

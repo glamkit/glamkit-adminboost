@@ -85,7 +85,7 @@ class PreviewInlineForm(forms.ModelForm):
         
     class Media:
         css = { 
-            'all': ("%sadminboost/styles.css" % settings.MEDIA_URL,)
+            'all': ("%sadminboost/styles.css" % settings.STATIC_URL,)
             }
     
 class ImagePreviewInlineForm(PreviewInlineForm):

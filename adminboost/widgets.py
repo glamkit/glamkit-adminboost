@@ -49,8 +49,15 @@ def render_edit_links(model, links, db_field):
                 model._meta.object_name.lower()),
             kwargs={'field_name': db_field.name})
     except NoReverseMatch:
-        reload_url = '#error:no-reverse-match'
-        # TODO: stop this from breaking in inlines, etc.
+        try:
+            # Check if perchance we're dealing with an inline
+            reload_url = reverse(
+                'inline_%s_render_edit_links' % \
+                    model._meta.object_name.lower(),
+                kwargs={'field_name': db_field.name}
+            )
+        except NoReverseMatch:
+            reload_url = '#error:no-reverse-match'
     return render_to_string(
         _template_list(model, '_edit_popup_link_group.html'), {
             'links': links,

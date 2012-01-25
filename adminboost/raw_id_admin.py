@@ -60,3 +60,9 @@ def admin_improvement_factory(parent_class):
 
 ImprovedRawIdAdmin = admin_improvement_factory(admin.ModelAdmin)
 ImprovedRawIdStackedInline = admin_improvement_factory(admin.StackedInline)
+
+try:
+    from feincms.admin.item_editor import FeinCMSInline
+    ImprovedFeinCMSInline = admin_improvement_factory(FeinCMSInline)
+except ImportError:
+    pass

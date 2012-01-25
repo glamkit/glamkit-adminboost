@@ -41,9 +41,12 @@ class PreviewWidget(forms.widgets.Input):
 
 class ImagePreviewWidget(PreviewWidget):        
         
-    def render(self, name, data, attrs={}):
+    def render(self, name, data, attrs=None):
         from easy_thumbnails.files import get_thumbnailer
         from easy_thumbnails.files import Thumbnailer
+        if attrs is None:
+            attrs = {}
+
         if not self.form.preview_instance_required or self.instance is not None:
             images = self.form.get_images(self.instance)
             options = dict(size=(120, 120), crop=False)
@@ -54,7 +57,12 @@ class ImagePreviewWidget(PreviewWidget):
                     image_url = default_storage.url(force_unicode(image.file.name))
                 else:
                     image_url = image.file.url
-                html += '<div class="adminboost-preview-thumbnail"><a href="%(image_url)s" target="_blank"><img src="%(thumbnail_url)s"/></a></div>' % {'image_url': image_url, 'thumbnail_url': thumbnail.url}
+                html += '<div class="adminboost-preview-thumbnail">' \
+                        '<a href="%(image_url)s" target="_blank">' \
+                        '<img src="%(thumbnail_url)s"/></a></div>' % {
+                            'image_url': image_url,
+                            'thumbnail_url': thumbnail.url
+                        }
             help_text = self.form.get_preview_help_text(self.instance)
             if help_text is not None:
                 html += '<p class="help">%s</p>' % force_unicode(help_text)
@@ -68,12 +76,15 @@ class PreviewField(forms.Field):
     def __init__(self, *args, **kwargs):
         self.instance = kwargs.pop('instance', None)
         self.form = kwargs.pop('form', None)
-        kwargs['widget'] = self.form.preview_widget_class(instance=self.instance, form=self.form)
+        kwargs['widget'] = self.form.preview_widget_class(
+            instance=self.instance, form=self.form)
         super(PreviewField, self).__init__(*args, **kwargs)
 
 class PreviewInlineForm(forms.ModelForm):
-    
-    preview_instance_required = True # If True, the widget will only be displayed if an instance of the model exists (i.e. the object has already been saved at least once)
+    # If True, the widget will only be displayed if an
+    # instance of the model exists (i.e. the object
+    # has already been saved at least once).
+    preview_instance_required = True
     
     def __init__(self, *args, **kwargs):
         super(PreviewInlineForm, self).__init__(*args, **kwargs)
@@ -86,16 +97,22 @@ class PreviewInlineForm(forms.ModelForm):
     class Media:
         css = { 
             'all': ("%sadminboost/styles.css" % settings.STATIC_URL,)
-            }
+        }
     
 class ImagePreviewInlineForm(PreviewInlineForm):
     
     preview_widget_class = ImagePreviewWidget
     
     def get_preview_help_text(self, instance):
-        ''' Returns text that should be displyed under the image(s). Useful for example to display a disclaimer about the preview '''
-        return None
-    
+        """
+        Returns text that should be displayed under
+        the image(s). Useful for example to display a
+        disclaimer about the preview
+        """
+
     def get_images(self, instance): # TODO: Rename to get_preview_images
-        ''' This needs to be specified by the child form class, as we cannot anticipate the name of the image model field '''
-        raise NotImplementedError
+        """
+        This needs to be specified by the child
+        form class, as we cannot anticipate the name of the image model field
+        """
+        raise NotImplementedError()

@@ -9,10 +9,10 @@ function get_edit_popup_id(edit_link){
 }
 
 function showRelatedObjectEditPopup(triggeringLink) {
-	var name = get_edit_popup_id(triggeringLink);
-	name = id_to_windowname(name);
+	var name = id_to_windowname(get_edit_popup_id(triggeringLink));
 	var href;
 	if (triggeringLink.href.search(/\?/) >= 0) {
+        // pop=1 is the django one, _popup=1&_edit_popup=1 is our contribution.
 		href = triggeringLink.href + '&pop=1&_popup=1&_edit_popup=1';
 	} else {
 		href = triggeringLink.href + '?pop=1&_popup=1&_edit_popup=1';
@@ -28,13 +28,13 @@ window.djangoDismissRelatedLookupPopup = window.dismissRelatedLookupPopup;
 window.dismissRelatedLookupPopup = function(win, newId, newRepr){
 	window.djangoDismissRelatedLookupPopup(win, newId, newRepr);
 	django.jQuery("#lookup_"+windowname_to_id(win.name)).change();
-}
+};
 
 window.djangoDismissAddAnotherPopup = window.dismissAddAnotherPopup;
 window.dismissAddAnotherPopup = function(win, newId, newRepr){
 	window.djangoDismissAddAnotherPopup(win, newId, newRepr);
 	django.jQuery("#lookup_"+windowname_to_id(win.name)).change();
-}
+};
 
 function dismissEditPopup(win, newId, newRepr){
 	dismissRelatedLookupPopup(win, newId, newRepr);

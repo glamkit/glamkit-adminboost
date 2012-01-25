@@ -1,1 +1,7 @@
-<strong><a href="{{ change_url }}" class="changelink edit-popup-link edit_popup_{{ input_id }}" {% if popup %}onclick="return showRelatedObjectEditPopup(this);"{% endif %}>edit <cite style="font-style:italic">{{ object_string }}</cite></a></strong>
+<strong>
+  <a href="{{ change_url }}" class="changelink edit-popup-link edit_popup_{{ input_id }}"
+           {% if popup %}onclick="return showRelatedObjectEditPopup(this);"{% endif %}>
+    edit
+    <cite style="font-style:italic">{{ object_string }}</cite>
+  </a>
+</strong>

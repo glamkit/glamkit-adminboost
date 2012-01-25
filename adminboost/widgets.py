@@ -20,6 +20,9 @@ def _template_list(obj, template_name):
         )
 
 def render_edit_link(obj, db_field, popup=True, request=None):
+    """
+
+    """
     change_permission = '%s.change_%s' % (
         obj._meta.app_label, obj._meta.object_name.lower())
     if request and not request.user.has_perm(change_permission, obj):

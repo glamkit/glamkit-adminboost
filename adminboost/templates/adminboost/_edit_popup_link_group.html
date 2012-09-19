@@ -1,8 +1,0 @@
-<span class="edit-link-group" id="edit-link-group_{{ field_id }}">
-  &nbsp;
-  {% for link in links %}
-    {{ link }}
-    {% if not forloop.last %}, {% endif %}
-  {% endfor %}
-  <a style="display:none" class="reload-link" href="{{ reload_url }}"></a>
-</span>

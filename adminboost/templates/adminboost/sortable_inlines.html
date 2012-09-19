@@ -1,9 +1,0 @@
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}adminboost/jquery-ui-1.8.4/ui-lightness/jquery-ui-1.8.4.custom.css" />
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}adminboost/styles.css" />
-<script type="text/javascript" src="{{ STATIC_URL }}adminboost/jquery-1.4.2.min.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}adminboost/jquery-ui-1.8.4/jquery-ui-1.8.4.min.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}adminboost/scripts.js"></script>
-<script type="text/javascript">
-    var sortable_inlines = [{% for inline in inlines %}["{{ inline.0 }}",{% if inline.1 %}"{{ inline.1 }}"{% else %}undefined{% endif %}],{% endfor %}];
-    init_sortable_inlines(sortable_inlines);
-</script>
